@@ -29,23 +29,35 @@ public class ZServer {
                 responder.send("Server Connected.");
             }
 
-            while(!Thread.currentThread().isInterrupted()) {
-                taskRec = responder.recvStr();
-                taskMsg = "";
-                System.out.println("Task received: " + taskRec);
-                taskInt = Integer.parseInt(taskRec);
-                for (int i = 0; i < taskInt; i++) {
-                    if (PrimeNumbers.isPrime(i)){
-                        taskMsg += (i + ", ");
+
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    taskRec = responder.recvStr();
+                    taskMsg = "Primes: ";
+                    System.out.println("Task received: " + taskRec);
+                    taskInt = Integer.parseInt(taskRec);
+                    for (int i = 0; i < taskInt; i++) {
+                        if (PrimeNumbers.isPrime(i)) {
+                            taskMsg += (i + ", ");
+                        }
                     }
-                }
-                if (taskMsg.endsWith(", ")) {
-                    taskMsg = taskMsg.substring(0, taskMsg.length() - 2);
+                    if (taskMsg.endsWith(", ")) {
+                        taskMsg = taskMsg.substring(0, taskMsg.length() - 2);
+                    }
+
+                    if (taskMsg.isEmpty()) {
+                        taskMsg = "No primes found.";
+                    }
+
+                } catch (NumberFormatException e) {
+                    taskMsg = "Error: Invalid Input. Please enter an integer.";
                 }
                 responder.send(taskMsg);
                 System.out.println("List of primes sent.");
-            }
 
+
+
+            }
         }
     }
 }

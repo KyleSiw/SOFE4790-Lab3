@@ -16,7 +16,7 @@ public class ZClient {
     public static void main(String[] args) {
 
         Scanner uinp = new Scanner(System.in);
-        int taskInt = 0;
+        String taskInt = "";
         String taskRec = "";
 
         String host = (args.length > 0) ? args[0] : "localhost";
@@ -36,13 +36,13 @@ public class ZClient {
 
             while(!Thread.currentThread().isInterrupted()) {
                 System.out.println("Please enter a integer.");
-                taskInt = uinp.nextInt();
+                taskInt = uinp.nextLine();
                 requester.send(String.valueOf(taskInt));
                 System.out.println("Task sent: " + taskInt);
 
                 taskRec = requester.recvStr();
                 if (taskRec != null) {
-                    System.out.println("Primes Received: " + taskRec);
+                    System.out.println(taskRec);
                 }
             }
 
