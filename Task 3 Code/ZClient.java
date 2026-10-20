@@ -8,6 +8,8 @@
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+
+import java.util.Objects;
 import java.util.Scanner;
 
 public class ZClient {
@@ -26,6 +28,7 @@ public class ZClient {
         try (ZContext context = new ZContext()) {
             ZMQ.Socket requester = context.createSocket(SocketType.REQ);
             requester.connect("tcp://" + host + ":" + port);
+            requester.setReceiveTimeOut(5000);
 
             //  Your code goes here
             requester.send("Client Connected.");
@@ -35,15 +38,20 @@ public class ZClient {
             }
 
             while(!Thread.currentThread().isInterrupted()) {
-                System.out.println("Please enter a integer.");
+                System.out.println("Please enter a string (or close to exit).");
                 taskInt = uinp.nextLine();
-                requester.send(String.valueOf(taskInt));
+                requester.send(taskInt);
                 System.out.println("Task sent: " + taskInt);
 
                 taskRec = requester.recvStr();
-                if (taskRec != null) {
-                    System.out.println(taskRec);
+                if(taskRec == null) {
+                    System.out.println("Server timed out.");
+                    break;
                 }
+                if (Objects.equals(taskInt, "close")){
+                    break;
+                }
+                System.out.println(taskRec);
             }
 
 
