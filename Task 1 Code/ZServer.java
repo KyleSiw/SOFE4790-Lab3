@@ -20,6 +20,12 @@ public class ZServer {
             responder.bind("tcp://*:" + port);
 
             //  Your code goes here
+            String pulse = responder.recvStr();
+            if (pulse != null) {
+                System.out.println(pulse);
+                responder.send("Server Connected.");
+            }
+
 
         }
     }

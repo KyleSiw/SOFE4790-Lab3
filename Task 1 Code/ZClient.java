@@ -21,6 +21,11 @@ public class ZClient {
             requester.connect("tcp://" + host + ":" + port);
 
             //  Your code goes here
+            requester.send("Client Connected.");
+            String pulse = requester.recvStr();
+            if (pulse != null) {
+                System.out.println(pulse);
+            }
 
         }
     }
